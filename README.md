@@ -1,39 +1,41 @@
-Kubernetes Cluster Validation & Delivery Handover Script
-k8s-cluster-validate.sh
-A comprehensive, production-grade Bash script that performs a full health check of a Kubernetes cluster and automatically generates a clean, professional Cluster Delivery Handover Template ready to be sent to application teams, customers, or auditors.
-Features
+# Kubernetes Cluster Validation & Delivery Handover Script  
+**`k8s-cluster-validate.sh`**
 
-Checks all major components in one run:
-Namespaces (Active/Terminating)
-Helm releases (deployed vs failed/pending)
-Deployments (ready replicas)
-Pods (Running, Pending, Failed, CrashLoopBackOff, etc.)
-Nodes status
-Flux Kustomizations (if Flux is installed)
-Istio version and control-plane health
-All Ingress URLs → live HTTP + DNS connectivity test
+A comprehensive, production-grade Bash script that performs a full health check of a Kubernetes cluster and automatically generates a clean, professional **Cluster Delivery Handover Template** ready to be sent to application teams, customers, or auditors.
 
-Color-coded, emoji-rich console output
-Consolidated beautiful ASCII boxed report with:
-Cluster metadata (name, version, Istio version)
-Key service endpoints (Prometheus, Alertmanager, Grafana, Kiali, etc.) – auto-discovered from healthy Ingresses
-Summary table of healthy vs total resources
-Detailed list of every problem found
-Final verdict: ALL SYSTEMS HEALTHY or ISSUES FOUND – REVIEW REQUIRED
+### Features
 
-Supports checking a single namespace or the entire cluster
-Works with custom kube contexts
-Configurable HTTP timeout for Ingress checks
+- Checks **all major components** in one run:
+  - Namespaces (Active/Terminating)
+  - Helm releases (deployed vs failed/pending)
+  - Deployments (ready replicas)
+  - Pods (Running, Pending, Failed, CrashLoopBackOff, etc.)
+  - Nodes status
+  - Flux Kustomizations (if Flux is installed)
+  - Istio version and control-plane health
+  - All Ingress URLs → live HTTP + DNS connectivity test
+- Color-coded, emoji-rich console output
+- Consolidated **beautiful ASCII boxed report** with:
+  - Cluster metadata (name, version, Istio version)
+  - Key service endpoints (Prometheus, Alertmanager, Grafana, Kiali, etc.) – auto-discovered from healthy Ingresses
+  - Summary table of healthy vs total resources
+  - Detailed list of every problem found
+  - Final verdict: **ALL SYSTEMS HEALTHY** or **ISSUES FOUND – REVIEW REQUIRED**
+- Supports checking a single namespace or the entire cluster
+- Works with custom kube contexts
+- Configurable HTTP timeout for Ingress checks
 
-Use Cases
+### Use Cases
 
-Pre-delivery validation before handing a cluster to application teams
-Post-install verification of platform components (monitoring, logging, service mesh)
-Periodic health checks in CI/CD or on-call runbooks
-Audit-ready handover documentation
+- Pre-delivery validation before handing a cluster to application teams
+- Post-install verification of platform components (monitoring, logging, service mesh)
+- Periodic health checks in CI/CD or on-call runbooks
+- Audit-ready handover documentation
 
-Prerequisites
-Bash# Core tools
+### Prerequisites
+
+```bash
+# Core tools
 kubectl
 helm
 jq
@@ -43,8 +45,12 @@ nslookup (or dig)
 # Optional (only if you use them)
 fluxctl   # only needed if you have Flux v2 Kustomizations
 istioctl  # not required – script uses pilot-discovery directly
-Usage
-Bash# 1. Make it executable
+```
+
+### Usage
+
+```bash
+# 1. Make it executable
 chmod +x k8s-cluster-validate.sh
 
 # 2. Run against current context (all namespaces)
@@ -59,8 +65,12 @@ chmod +x k8s-cluster-validate.sh
 
 # 4. Get help
 ./k8s-cluster-validate.sh -h
-Sample Output (truncated)
-textStarting Kubernetes Cluster Validation
+```
+
+### Sample Output (truncated)
+
+```
+Starting Kubernetes Cluster Validation
 
 Cluster: prod-cluster-01
 Cluster version: 1.29.8
@@ -114,3 +124,22 @@ Checking Ingress URLs
 └─────────────────────┴────────────┴──────────┴──────────┴──────────┘
 
 ALL SYSTEMS HEALTHY - CLUSTER READY FOR DELIVERY!
+```
+
+If issues are found, a detailed **"DETAILED ISSUES BREAKDOWN"** section lists every problematic resource.
+
+### Customization
+
+- Add more auto-detected URLs by editing the `case` block in `generate_template_report`
+- Change the box style or colors by modifying the `print_status` function and ASCII art
+- Extend with additional resource checks (DaemonSets, StatefulSets, PVs, etc.)
+
+### Contributing
+
+Feel free to open issues or PRs! Common contributions:
+- Support for ArgoCD Application health
+- Additional monitoring tools (Loki, Jaeger, etc.)
+- Slack/Teams webhook notification on failure
+- Output to Markdown/HTML
+
+**Enjoy a smooth, confident cluster handover every time!**
